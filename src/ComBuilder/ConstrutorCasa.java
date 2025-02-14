@@ -1,5 +1,3 @@
-package ComBuilder;
-
 public abstract class ConstrutorCasa {
     protected Casa casa;
     
@@ -14,4 +12,8 @@ public abstract class ConstrutorCasa {
     public abstract void construirFundacao();
     public abstract void construirParedes();
     public abstract void construirTelhado();
+    public abstract void construirPortas();
+    public abstract void construirJanelas();
+    public abstract void construirGaragem();
+    public abstract void construirPiscina();
 }

@@ -4,7 +4,67 @@
 O padrão Builder separa a construção de um objeto complexo de sua representação, permitindo que o mesmo processo de construção gere diferentes representações. Essa separação torna o código mais modular, flexível e de fácil manutenção, especialmente quando o objeto a ser construído possui muitas etapas ou variações.
 
 ## Motivação 
-Imagine desenvolver um sistema onde objetos complexos podem ter diferentes configurações ou versões. Gerenciar a criação desses objetos sem duplicar código e mantendo a flexibilidade para mudanças futuras pode ser um grande desafio. É nesse contexto que o padrão de projeto **Builder** se torna essencial: ele organiza o processo de construção de objetos, separando a lógica de montagem dos detalhes específicos. Isso não apenas facilita a manutenção, mas também permite reutilizar o mesmo processo de construção para criar diversas representações, promovendo clareza e modularidade no código.
+Imagine uma grande construtora que atua em vários segmentos do mercado imobiliário. Em seu portfólio, há projetos padrão, que seguem uma sequência tradicional de construção, e projetos personalizados, onde a ordem de execução das etapas pode ser alterada para atender demandas específicas dos clientes (por exemplo, priorizando a montagem dos ambientes internos antes da fundação completa para projetos com cronogramas diferenciados).
+
+Nesse cenário, o padrão Builder é extremamente útil, pois:
+
+Pois o mesmo Builder pode ser utilizado tanto para projetos padrão quanto para os personalizados.
+Facilita a manutenção e a expansão: Ao introduzir novos tipos de construção (novas sequências ou etapas extras), basta criar um novo Diretor que orquestre essas mudanças, sem modificar os Builders existentes.
+Permite a reutilização do código: Diferentes diretores podem reutilizar o mesmo Builder para construir produtos similares, mas com variações na ordem de montagem.
+
+```plantuml
+@startuml
+' Abstract Builder: ConstrutorCasa com métodos atualizados
+abstract class ConstrutorCasa {
+    # casa : Casa
+    + criarNovaCasa()
+    + getCasa() : Casa
+    + construirFundacao()
+    + construirParedes()
+    + construirTelhado()
+    + construirPortas()
+    + construirJanelas()
+    + construirGaragem()
+    + construirPiscina()
+}
+
+' Concrete Builders
+class ConstrutorCasaModerna extends ConstrutorCasa
+class ConstrutorCasaClassica extends ConstrutorCasa
+
+' Director Padrão: sequência tradicional
+class DiretorCasaPadrao {
+    - construtor : ConstrutorCasa
+    + setConstrutor(construtor : ConstrutorCasa)
+    + construirCasa()
+    + getCasa() : Casa
+}
+
+' Director Personalizado: sequência customizada
+class DiretorCasaPersonalizado {
+    - construtor : ConstrutorCasa
+    + setConstrutor(construtor : ConstrutorCasa)
+    + construirCasa()
+    + getCasa() : Casa
+}
+
+' Produto: Casa com atributos adicionais
+class Casa {
+    + fundacao : String
+    + paredes : String
+    + telhado : String
+    + numPortas : int
+    + numJanelas : int
+    + temGaragem : boolean
+    + temPiscina : boolean
+}
+
+DiretorCasaPadrao --> ConstrutorCasa : "usa"
+DiretorCasaPersonalizado --> ConstrutorCasa : "usa"
+ConstrutorCasa --> Casa : "cria e monta"
+@enduml
+
+````
 
 ## Exemplo Builder:
 Imagine que você precise construir casas com configurações variadas (modernas, clássicas, minimalistas, etc.). Cada tipo de casa possui detalhes específicos quanto aos materiais, design e estrutura. Utilizar um único método para construir todas essas variações pode resultar em código confuso e de difícil manutenção.
@@ -23,6 +83,10 @@ Facilitar a manutenção e extensão: Novos tipos de produtos podem ser adiciona
     - " o algoritmo para criação de um objeto complexo deve ser independente das partes que compõem o objeto e de como elas são montadas."
     - " o processo de construção deve permitir diferentes representações para o objeto que é construído."
 
+## Estrutura
+
+![alt text](image.png)
+
 ## Participantes do Builder: references GOF
 
 - **Builder**
@@ -40,44 +104,61 @@ Facilitar a manutenção e extensão: Novos tipos de produtos podem ser adiciona
     -  representa o objeto complexo em construção. ConcreteBuilder constrói a representação interna do produto e define o processo pelo qual ele é montado;
     -  inclui classes que definem as partes constituintes, inclusive as interfaces para a montagem das partes no resultado final.
       
-## Estrutura
+
+Estrutura da Motivação:
+
 @startuml
-' Representação do Builder e seus participantes
-
-' Interface ou classe abstrata Builder, que especifica os métodos para construir partes do produto
-abstract class Builder {
-    + buildPartA()
-    + buildPartB()
-    + getResult() : Product
+' Abstract Builder: ConstrutorCasa com métodos para construir todas as partes
+abstract class ConstrutorCasa {
+    # casa : Casa
+    + criarNovaCasa()
+    + getCasa() : Casa
+    + construirFundacao()
+    + construirParedes()
+    + construirTelhado()
+    + construirPortas()
+    + construirJanelas()
+    + construirGaragem()
+    + construirPiscina()
 }
 
-' ConcreteBuilder que implementa a interface/abstrata Builder
-class ConcreteBuilder extends Builder {
-    - product : Product
-    + buildPartA()
-    + buildPartB()
-    + getResult() : Product
+' Concrete Builders
+class ConstrutorCasaModerna extends ConstrutorCasa
+class ConstrutorCasaClassica extends ConstrutorCasa
+
+' Director Padrão: utiliza sequência tradicional de construção
+class DiretorCasaPadrao {
+    - construtor : ConstrutorCasa
+    + setConstrutor(construtor : ConstrutorCasa)
+    + construirCasa()
+    + getCasa() : Casa
 }
 
-' Director, que utiliza a interface Builder para construir o produto
-class Director {
-    - builder: Builder
-    + setBuilder(builder: Builder)
-    + construct()
+' Director Personalizado: utiliza sequência customizada de construção
+class DiretorCasaPersonalizado {
+    - construtor : ConstrutorCasa
+    + setConstrutor(construtor : ConstrutorCasa)
+    + construirCasa()
+    + getCasa() : Casa
 }
 
-' Produto complexo que é montado pelo ConcreteBuilder
-class Product {
-    + partA : String
-    + partB : String
+' Produto: Casa com atributos adicionais
+class Casa {
+    + fundacao : String
+    + paredes : String
+    + telhado : String
+    + numPortas : int
+    + numJanelas : int
+    + temGaragem : boolean
+    + temPiscina : boolean
 }
 
-' Relacionamentos entre as classes
-Director --> Builder : "usa"
-Builder <|-- ConcreteBuilder
-ConcreteBuilder --> Product : "cria e monta"
+DiretorCasaPadrao --> ConstrutorCasa : "usa"
+DiretorCasaPersonalizado --> ConstrutorCasa : "usa"
+ConstrutorCasa --> Casa : "cria e monta"
 
 @enduml
+
 
 ## Participantes da motivação:
 
@@ -91,7 +172,7 @@ ConcreteBuilder --> Product : "cria e monta"
   - Fornece o método para recuperar a casa pronta.
   - **Exemplo**: Um arquiteto especializado em casas modernas cria designs com janelas amplas e linhas retas, enquanto o de casas clássicas prioriza ornamentos e telhados inclinados.
 
-- **Director (Diretor)**
+- **Director (DiretorCasaPadrao, DiretorCasaPersonalizado)**
   - Coordena o processo de construção seguindo um plano pré-definido.  
   - Não se preocupa com os detalhes de cada tipo de casa, apenas segue o plano do arquiteto escolhido.  
   - **Exemplo**: O diretor supervisiona os trabalhadores para garantir que as casas modernas ou clássicas sejam construídas corretamente.
@@ -106,30 +187,46 @@ Neste exemplo, a criação da Casa é feita diretamente por uma classe responsá
 
 @startuml
 class Casa {
-  - fundacao: String
-  - paredes: String
-  - telhado: String
-  + setFundacao(String)
-  + setParedes(String)
-  + setTelhado(String)
-  + toString(): String
+  - fundacao : String
+  - paredes : String
+  - telhado : String
+  - numPortas : int
+  - numJanelas : int
+  - temGaragem : boolean
+  - temPiscina : boolean
+  + setFundacao(fundacao : String)
+  + setParedes(paredes : String)
+  + setTelhado(telhado : String)
+  + setNumPortas(numPortas : int)
+  + setNumJanelas(numJanelas : int)
+  + setTemGaragem(temGaragem : boolean)
+  + setTemPiscina(temPiscina : boolean)
+  + toString() : String
 }
 
 class CasaCreator {
-  + createCasaModerna(): Casa
-  + createCasaClassica(): Casa
+  + createCasaModerna() : Casa
+  + createCasaClassica() : Casa
+  + createCasaLuxo() : Casa
 }
 
 CasaCreator --> Casa : cria
 @enduml
 
+
 ```java
-// Produto: Casa
+package SemBuilder;
+
 public class Casa {
     private String fundacao;
     private String paredes;
     private String telhado;
+    private int numPortas;
+    private int numJanelas;
+    private boolean temGaragem;
+    private boolean temPiscina;
 
+    // Getters e setters
     public void setFundacao(String fundacao) {
         this.fundacao = fundacao;
     }
@@ -142,33 +239,60 @@ public class Casa {
         this.telhado = telhado;
     }
     
+    public void setNumPortas(int numPortas) {
+        this.numPortas = numPortas;
+    }
+    
+    public void setNumJanelas(int numJanelas) {
+        this.numJanelas = numJanelas;
+    }
+    
+    public void setTemGaragem(boolean temGaragem) {
+        this.temGaragem = temGaragem;
+    }
+    
+    public void setTemPiscina(boolean temPiscina) {
+        this.temPiscina = temPiscina;
+    }
+    
     @Override
     public String toString() {
-        return "Casa [fundacao=" + fundacao + ", paredes=" + paredes + ", telhado=" + telhado + "]";
+        return "Casa [fundacao=" + fundacao + ", paredes=" + paredes 
+                + ", telhado=" + telhado + ", numPortas=" + numPortas 
+                + ", numJanelas=" + numJanelas + ", temGaragem=" + temGaragem 
+                + ", temPiscina=" + temPiscina + "]";
     }
 }
+package SemBuilder;
 
-// Classe que cria casas sem utilizar o padrão Builder
 public class CasaCreator {
 
     public Casa createCasaModerna() {
         Casa casa = new Casa();
-        casa.setFundacao("Fundação de concreto reforçado");
-        casa.setParedes("Paredes de vidro e aço");
+        casa.setFundacao("Concreto armado com isolamento térmico");
+        casa.setParedes("Vidro e aço");
         casa.setTelhado("Telhado plano com painéis solares");
+        casa.setNumPortas(4);
+        casa.setNumJanelas(10);
+        casa.setTemGaragem(true);
+        casa.setTemPiscina(false);
         return casa;
     }
     
     public Casa createCasaClassica() {
         Casa casa = new Casa();
-        casa.setFundacao("Fundação de concreto tradicional");
-        casa.setParedes("Paredes de tijolo");
+        casa.setFundacao("Concreto tradicional");
+        casa.setParedes("Alvenaria com revestimento em pedra");
         casa.setTelhado("Telhado inclinado com telhas cerâmicas");
+        casa.setNumPortas(6);
+        casa.setNumJanelas(8);
+        casa.setTemGaragem(true);
+        casa.setTemPiscina(false);
         return casa;
     }
 }
+package SemBuilder;
 
-// Client: Exemplo de Uso Sem Builder
 public class SemBuilderExample {
     public static void main(String[] args) {
         CasaCreator creator = new CasaCreator();
@@ -189,28 +313,44 @@ public class SemBuilderExample {
 
 @startuml
 class Casa {
-  - fundacao: String
-  - paredes: String
-  - telhado: String
+  - fundacao : String
+  - paredes : String
+  - telhado : String
+  - numPortas : int
+  - numJanelas : int
+  - temGaragem : boolean
+  - temPiscina : boolean
+  + setFundacao(String)
+  + setParedes(String)
+  + setTelhado(String)
+  + setNumPortas(int)
+  + setNumJanelas(int)
+  + setTemGaragem(boolean)
+  + setTemPiscina(boolean)
+  + toString() : String
 }
 
 abstract class ConstrutorCasa {
-  # casa: Casa
+  # casa : Casa
   + criarNovaCasa()
-  + getCasa(): Casa
+  + getCasa() : Casa
   + construirFundacao()
   + construirParedes()
   + construirTelhado()
+  + construirPortas()
+  + construirJanelas()
+  + construirGaragem()
+  + construirPiscina()
 }
 
 class ConstrutorCasaModerna extends ConstrutorCasa
 class ConstrutorCasaClassica extends ConstrutorCasa
 
 class Diretor {
-  - construtor: ConstrutorCasa
-  + setConstrutor(construtor: ConstrutorCasa)
+  - construtor : ConstrutorCasa
+  + setConstrutor(construtor : ConstrutorCasa)
   + construirCasa()
-  + getCasa(): Casa
+  + getCasa() : Casa
 }
 
 Diretor --> ConstrutorCasa : usa
@@ -221,6 +361,7 @@ note right of ConstrutorCasa
   define como a casa é construída
 end note
 @enduml
+
 
 
 
@@ -261,22 +402,40 @@ public class Casa {
     private String fundacao;
     private String paredes;
     private String telhado;
+    private int numPortas;
+    private int numJanelas;
+    private boolean temGaragem;
+    private boolean temPiscina;
 
+    // Getters e setters
     public void setFundacao(String fundacao) {
         this.fundacao = fundacao;
     }
-    
     public void setParedes(String paredes) {
         this.paredes = paredes;
     }
-    
     public void setTelhado(String telhado) {
         this.telhado = telhado;
+    }
+    public void setNumPortas(int numPortas) {
+        this.numPortas = numPortas;
+    }
+    public void setNumJanelas(int numJanelas) {
+        this.numJanelas = numJanelas;
+    }
+    public void setTemGaragem(boolean temGaragem) {
+        this.temGaragem = temGaragem;
+    }
+    public void setTemPiscina(boolean temPiscina) {
+        this.temPiscina = temPiscina;
     }
     
     @Override
     public String toString() {
-        return "Casa [fundacao=" + fundacao + ", paredes=" + paredes + ", telhado=" + telhado + "]";
+        return "Casa [fundacao=" + fundacao + ", paredes=" + paredes 
+                + ", telhado=" + telhado + ", numPortas=" + numPortas 
+                + ", numJanelas=" + numJanelas + ", temGaragem=" + temGaragem 
+                + ", temPiscina=" + temPiscina + "]";
     }
 }
 
@@ -295,46 +454,55 @@ public abstract class ConstrutorCasa {
     public abstract void construirFundacao();
     public abstract void construirParedes();
     public abstract void construirTelhado();
+    public abstract void construirPortas();
+    public abstract void construirJanelas();
+    public abstract void construirGaragem();
+    public abstract void construirPiscina();
 }
 
-// ConcreteBuilder: ConstrutorCasaModerna
+
+// ConcreteBuilder: ConstrutorCasaClassica
 public class ConstrutorCasaModerna extends ConstrutorCasa {
     @Override
     public void construirFundacao() {
-        casa.setFundacao("Fundação de concreto reforçado");
+        casa.setFundacao("Concreto armado com isolamento térmico");
     }
     
     @Override
     public void construirParedes() {
-        casa.setParedes("Paredes de vidro e aço");
+        casa.setParedes("Vidro e aço");
     }
     
     @Override
     public void construirTelhado() {
         casa.setTelhado("Telhado plano com painéis solares");
     }
+    
+    @Override
+    public void construirPortas() {
+        casa.setNumPortas(4);
+    }
+    
+    @Override
+    public void construirJanelas() {
+        casa.setNumJanelas(10);
+    }
+    
+    @Override
+    public void construirGaragem() {
+        casa.setTemGaragem(true);
+    }
+    
+    @Override
+    public void construirPiscina() {
+        casa.setTemPiscina(false);
+    }
 }
 
-// ConcreteBuilder: ConstrutorCasaClassica
-public class ConstrutorCasaClassica extends ConstrutorCasa {
-    @Override
-    public void construirFundacao() {
-        casa.setFundacao("Fundação de concreto tradicional");
-    }
-    
-    @Override
-    public void construirParedes() {
-        casa.setParedes("Paredes de tijolo");
-    }
-    
-    @Override
-    public void construirTelhado() {
-        casa.setTelhado("Telhado inclinado com telhas cerâmicas");
-    }
-}
 
 // Director: Gerencia o Processo de Construção
-public class Diretor {
+
+public class DiretorCasaPadrao {
     private ConstrutorCasa construtor;
     
     public void setConstrutor(ConstrutorCasa construtor) {
@@ -353,24 +521,60 @@ public class Diretor {
     }
 }
 
+public class DiretorCasaPersonalizado {
+    private ConstrutorCasa construtor;
+    
+    public void setConstrutor(ConstrutorCasa construtor) {
+        this.construtor = construtor;
+    }
+    
+    public void construirCasa() {
+        construtor.criarNovaCasa();
+        construtor.construirGaragem();
+        construtor.construirJanelas();
+        construtor.construirFundacao();
+        construtor.construirParedes();
+        construtor.construirTelhado();
+        construtor.construirPortas();
+        construtor.construirPiscina();
+    }
+    
+    public Casa getCasa() {
+        return construtor.getCasa();
+    }
+}
+
+
 // Client: Exemplo de Uso Com Builder
-public class BuilderExample {
+public class BuilderMultipleDirectorsExample {
     public static void main(String[] args) {
-        Diretor diretor = new Diretor();
+        DiretorCasaPadrao diretorPadrao = new DiretorCasaPadrao();
+        ConstrutorCasa construtorModerna = new ConstrutorCasaModerna();
+        diretorPadrao.setConstrutor(construtorModerna);
+        diretorPadrao.construirCasa();
+        Casa casaModernaPadrao = diretorPadrao.getCasa();
+        System.out.println("Casa Moderna (Diretor Padrão): " + casaModernaPadrao);
         
-        // Construindo uma casa moderna
-        ConstrutorCasa construtorModerno = new ConstrutorCasaModerna();
-        diretor.setConstrutor(construtorModerno);
-        diretor.construirCasa();
-        Casa casaModerna = diretor.getCasa();
-        System.out.println("Casa Moderna: " + casaModerna);
+        DiretorCasaPersonalizado diretorPersonalizado = new DiretorCasaPersonalizado();
+        ConstrutorCasa construtorModerna2 = new ConstrutorCasaModerna();
+        diretorPersonalizado.setConstrutor(construtorModerna2);
+        diretorPersonalizado.construirCasa();
+        Casa casaModernaPersonalizada = diretorPersonalizado.getCasa();
+        System.out.println("Casa Moderna (Diretor Personalizado): " + casaModernaPersonalizada);
         
-        // Construindo uma casa clássica
-        ConstrutorCasa construtorClassico = new ConstrutorCasaClassica();
-        diretor.setConstrutor(construtorClassico);
-        diretor.construirCasa();
-        Casa casaClassica = diretor.getCasa();
-        System.out.println("Casa Clássica: " + casaClassica);
+        DiretorCasaPadrao diretorPadraoClassica = new DiretorCasaPadrao();
+        ConstrutorCasa construtorClassica = new ConstrutorCasaClassica();
+        diretorPadraoClassica.setConstrutor(construtorClassica);
+        diretorPadraoClassica.construirCasa();
+        Casa casaClassicaPadrao = diretorPadraoClassica.getCasa();
+        System.out.println("Casa Clássica (Diretor Padrão): " + casaClassicaPadrao);
+        
+        DiretorCasaPersonalizado diretorPersonalizadoClassica = new DiretorCasaPersonalizado();
+        ConstrutorCasa construtorClassica2 = new ConstrutorCasaClassica();
+        diretorPersonalizadoClassica.setConstrutor(construtorClassica2);
+        diretorPersonalizadoClassica.construirCasa();
+        Casa casaClassicaPersonalizada = diretorPersonalizadoClassica.getCasa();
+        System.out.println("Casa Clássica (Diretor Personalizado): " + casaClassicaPersonalizada);
     }
 }
 

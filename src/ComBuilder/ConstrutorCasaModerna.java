@@ -1,27 +1,27 @@
-public class ConstrutorCasaClassica extends ConstrutorCasa {
+public class ConstrutorCasaModerna extends ConstrutorCasa {
     @Override
     public void construirFundacao() {
-        casa.setFundacao("Concreto tradicional");
+        casa.setFundacao("Concreto armado com isolamento térmico");
     }
     
     @Override
     public void construirParedes() {
-        casa.setParedes("Alvenaria com revestimento em pedra");
+        casa.setParedes("Vidro e aço");
     }
     
     @Override
     public void construirTelhado() {
-        casa.setTelhado("Telhado inclinado com telhas cerâmicas");
+        casa.setTelhado("Telhado plano com painéis solares");
     }
     
     @Override
     public void construirPortas() {
-        casa.setNumPortas(6);
+        casa.setNumPortas(4);
     }
     
     @Override
     public void construirJanelas() {
-        casa.setNumJanelas(8);
+        casa.setNumJanelas(10);
     }
     
     @Override

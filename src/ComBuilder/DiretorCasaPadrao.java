@@ -1,6 +1,5 @@
-package ComBuilder;
 
-public class Diretor {
+public class DiretorCasaPadrao {
     private ConstrutorCasa construtor;
     
     public void setConstrutor(ConstrutorCasa construtor) {
