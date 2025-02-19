@@ -1,38 +1,24 @@
-class Entity {
-    constructor(type, health, speed, damage) {
-        this.type = type;
+class Enemy {
+    constructor(name, health, attack) {
+        this.name = name;
         this.health = health;
-        this.speed = speed;
-        this.damage = damage;
+        this.attack = attack;
     }
 
     clone() {
-        const clone = this.constructor;
-        const properties = Object.assign({}, this);
-        return new clone(...Object.values(properties));
-    }
-
-    reset(health, speed, damage) {
-        this.health = health;
-        this.speed = speed;
-        this.damage = damage;
+        return new Enemy(this.name, this.health, this.attack);
     }
 }
 
-class Enemy extends Entity {
-    constructor(health, speed, damage, ai) {
-        super("enemy", health, speed, damage);
-        this.ai = ai;
+class EnemyDirector {
+    static cloneWithBuffs(enemy, extraHealth, extraAttack) {
+        const clone = enemy.clone();
+        clone.health += extraHealth;
+        clone.attack += extraAttack;
+        return clone;
     }
 }
 
-class Player extends Entity {
-    constructor(health, speed, damage, controller) {
-        super("player", health, speed, damage);
-        this.controller = controller;
-    }
-}
-
-
-const enemy1 = new Enemy(5, 1, 3, "melee");
-const enemy2 = enemy1.clone(); 
+const orcBuffed = EnemyDirector.cloneWithBuffs(baseOrc, 50, 5);
+const baseOrc = new Enemy("Orc", 100, 15);
+const clonedOrc = baseOrc.clone();
