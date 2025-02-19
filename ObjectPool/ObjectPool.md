@@ -1,10 +1,10 @@
 ## Padrão Object Pool
+O Object Pool é um padrão de projeto criacional que reduz o custo de criação e destruição de objetos ao reutilizar instâncias em vez de instanciar novas. Esse padrão é útil em cenários onde a criação de objetos é cara, como no gerenciamento de conexões a banco de dados, renderização de gráficos ou alocação de memória intensiva.
 
-### Motivação:
-Criar e destruir objetos repetidamente pode ser ineficiente, especialmente quando os objetos são pesados, como conexões com banco de dados, conexões de rede ou mesmo entidades em um jogo.
+### Exemplo de Melhora:
+Imagine um jogo onde diversos projéteis são disparados por armas a todo momento. Se cada projétil for criado do zero, o sistema terá que alocar memória para cada nova instância, e quando o projétil desaparecer, o Garbage Collector terá que limpar a memória repetidamente. Isso pode gerar pausas e impactar a fluidez do jogo. Sendo assim, reutilizar os projéteis através de uma Pool oferece maior performance no sistema, visto que irá gerar menos carga para o gerenciamento de memória, além de descartar novos cálculos complexos vinculados ao contexto de criar novas instâncias repetidamente.
 
-O Object Pool resolve esse problema mantendo um conjunto de objetos reutilizáveis. Quando um objeto não está mais sendo utilizado, ele volta ao pool para ser reaproveitado posteriormente, reduzindo a carga no sistema.
-
+### Exemplo UML:
 @startuml
 ' Classe que gerencia o pool de objetos
 class EntityPool {
@@ -33,7 +33,7 @@ Entity <|-- Enemy
 @enduml
 
 
-## Exemplo:
+## Exemplo JS:
 
 ```js
 
