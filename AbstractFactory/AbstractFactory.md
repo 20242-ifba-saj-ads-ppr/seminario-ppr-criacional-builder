@@ -1,9 +1,10 @@
 ## Padrão Abstract Factory
+O Abstract Factory é um padrão criacional que fornece uma interface para criação de famílias de objetos relacionados sem especificar suas classes concretas. Ele permite que o sistema seja projetado de forma flexível e extensível, promovendo a separação entre a lógica de criação e o uso. Diferente de uma simples fábrica (Factory Method), a Abstract cria múltiplos objetos relacionados de uma vez, garantindo que todos sigam um mesmo conjunto de regras e funcionem em conjunto.
+
 ### Motivação
-Em muitos sistemas, há a necessidade de criar diferentes tipos de objetos que compartilham um conjunto de características, mas possuem variações na implementação. Por exemplo, um jogo pode ter diferentes personagens (jogadores e inimigos), cada um com atributos específicos.
+Considere um jogo onde há diferentes tipos de personagens, como humanos, elfos e orcs. Cada raça possui variações de classes, como guerreiro, mago e arqueiro. Sem o Abstract Factory, a criação de personagens exigiria múltiplas verificações de tipo espalhadas pelo código, tornando a manutenção difícil e violando o princípio de responsabilidade única. Mas, com o Abstract Factory é possível: Criar famílias inteiras de personagens sem precisar modificar o código que os utiliza; Garantir compatibilidade entre os objetos criados; Facilitar expansões futuras. Esse padrão melhora legibilidade e modularidade, tornando o código escalável e organizado.
 
-O Abstract Factory permite a criação desses objetos sem expor diretamente suas classes concretas. Assim, é possível criar diferentes entidades de maneira flexível e organizada, facilitando a manutenção e expansão do código.
-
+### Exemplo UML:
 @startuml
 ' Interface para a Abstract Factory
 interface EntityFactory {
@@ -37,7 +38,7 @@ Entity <|-- Player
 @enduml
 
 
-## Exemplo:
+## Exemplo JS:
 ```js
 // Objeto que contém as funções para criar cada tipo de entidade
 
