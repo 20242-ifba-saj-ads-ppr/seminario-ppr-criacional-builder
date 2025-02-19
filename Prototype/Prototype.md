@@ -1,9 +1,8 @@
 ## Padrão Prototype
+O padrão Prototype é um padrão de projeto criacional que permite a clonagem de objetos já existentes. Isso é útil quando a criação de um objeto envolve processos custosos de inicialização, como cálculos complexos, carregamento de dados ou consumo de memória. No Prototype, um objeto serve como um modelo base, permitindo que novas instâncias sejam criadas a partir dele por meio de cópias diretas. Essas cópias preservam o estado do objeto original e podem ser modificadas conforme o contexto.
 
-### Motivação:
-Imagine que você está desenvolvendo um jogo onde há diferentes tipos de inimigos e personagens. Cada entidade pode ter diferentes atributos como vida, velocidade e dano. Criar novas instâncias repetidamente pode ser custoso, especialmente se cada entidade exige cálculos ou inicializações complexas.
-
-O Prototype resolve esse problema permitindo que um objeto seja clonado rapidamente, mantendo seus atributos, sem precisar ser recriado do zero. Isso economiza processamento e mantém a performance do sistema.
+### Exemplo de Necessidade:
+Considere um jogo onde diferentes inimigos são criados dinamicamente durante a execução. Cada inimigo tem um conjunto de atributos, como vida, velocidade, força e resistência. Criar inimigos do zero pode ser ineficiente, especialmente se houver um grande número de instâncias sendo criadas constantemente. Sem o uso do Prototype, cada inimigo criado precisaria: Alocar memória para a nova instância; Definir atributos individualmente; Executar cálculos de inicialização; Repetir o processo desnecessariamente. O padrão Prototype melhora essa situação ao permitir a clonagem direta de objetos, reduzindo a carga no Garbage Collector e minimizando operações repetitivas.
 
 @startuml
 ' Interface Prototype
