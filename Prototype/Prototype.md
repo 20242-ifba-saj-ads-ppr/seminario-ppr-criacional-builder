@@ -4,6 +4,8 @@ O padrão Prototype é um padrão de projeto criacional que permite a clonagem d
 ### Exemplo de Necessidade:
 Considere um jogo onde diferentes inimigos são criados dinamicamente durante a execução. Cada inimigo tem um conjunto de atributos, como vida, velocidade, força e resistência. Criar inimigos do zero pode ser ineficiente, especialmente se houver um grande número de instâncias sendo criadas constantemente. Sem o uso do Prototype, cada inimigo criado precisaria: Alocar memória para a nova instância; Definir atributos individualmente; Executar cálculos de inicialização; Repetir o processo desnecessariamente. O padrão Prototype melhora essa situação ao permitir a clonagem direta de objetos, reduzindo a carga no Garbage Collector e minimizando operações repetitivas.
 
+
+### Exemplo UML:
 @startuml
 ' Interface Prototype
 interface Prototype {
@@ -35,7 +37,7 @@ Player ..|> Entity
 @enduml
 
 
-## Exemplo:
+## Exemplo JS:
 ```js
 
 class Entity {
